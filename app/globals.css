@@ -1,0 +1,1376 @@
+/* 霞鹜文楷：本地化（不再依赖 Google Fonts，避免走查/离线环境加载失败） */
+@import '../public/fonts/lxgw/lxgw-wenkai.css';
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+/* 暖枫手写体（用户自带字体，全局默认；woff2 体积约为 ttf 的 44%，原 ttf 备份在项目外 backups 目录） */
+@font-face {
+  font-family: 'WarmFeng Hand';
+  src: url('/fonts/handwriting.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@custom-variant dark (.dark &);
+
+/* 状态栏避让变量默认值：JS 未写入前先用 CSS env()（真机上由原生实测值覆盖） */
+:root {
+  --wi-sb: env(safe-area-inset-top, 0px);
+}
+
+@theme inline {
+  --font-sans: 'LXGW WenKai', 'WarmFeng Hand', 'Noto Serif SC', serif;
+  --font-serif: 'LXGW WenKai', 'WarmFeng Hand', 'Noto Serif SC', serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-sakura: var(--sakura);
+  --color-sakura-soft: var(--sakura-soft);
+  --color-leaf: var(--leaf);
+  --color-leaf-soft: var(--leaf-soft);
+  --color-sky: var(--sky);
+  --color-sky-soft: var(--sky-soft);
+  --color-sun: var(--sun);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);--radius: 5px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 5px;
+  --radius-xl: 5px;
+  --radius-2xl: 5px;
+  --radius-3xl: 5px;
+}
+
+:root {
+  color-scheme: light;
+  --background: oklch(0.985 0.012 85);
+  --foreground: oklch(0.35 0.03 40);
+  --card: oklch(0.995 0.006 90);
+  --card-foreground: oklch(0.37 0.03 40);
+  --primary: oklch(0.78 0.11 15);
+  --primary-foreground: oklch(0.99 0.01 90);
+  --secondary: oklch(0.95 0.03 20);
+  --secondary-foreground: oklch(0.45 0.06 20);
+  --muted: oklch(0.955 0.015 80);
+  --muted-foreground: oklch(0.58 0.025 45);
+  --accent: oklch(0.86 0.08 145);
+  --accent-foreground: oklch(0.38 0.06 150);
+  --destructive: oklch(0.63 0.18 25);
+  --border: oklch(0.92 0.02 60);
+  --input: oklch(0.93 0.018 60);
+  --ring: oklch(0.78 0.11 15);
+  --sakura: oklch(0.80 0.075 85);
+  --sakura-soft: oklch(0.96 0.025 85);
+  --leaf: oklch(0.78 0.1 148);
+  --leaf-soft: oklch(0.92 0.05 148);
+  --sky: oklch(0.8 0.08 230);
+  --sky-soft: oklch(0.93 0.04 230);
+  --sun: oklch(0.88 0.09 85);
+  --surface-1: oklch(0.98 0.008 90);
+  --surface-2: oklch(0.95 0.015 85);
+  --home-fade: 251, 246, 238; /* 首页顶部背景图向页面底过渡的渐变色（rgb 分量） */
+  --radius: 1.25rem;
+
+  /* 运动手帐设计令牌 */
+  --sports-paper: #FBF9F1;      /* 道林纸背景 */
+  --sports-ink: #4A3B32;        /* 焦茶色主文字 */
+  --sports-ink-soft: #8B7355;   /* 暖茶色次文字 */
+  --sports-ink-muted: #6B5E58;  /* 浅棕文字 */
+  --sports-sand: #F6EBDD;       /* 米色装饰背景 */
+  --sports-sand-deep: #F0E4D4;  /* 深米色 */
+  --sports-gold: #B8934E;       /* 金色强调 */
+  --sports-gold-soft: #D9B36A;  /* 浅金色 */
+  --sports-line: #D4C5B2;       /* 分隔线色 */
+  --sports-sage: #9BB89C;       /* 抹茶绿 */
+  --sports-sage-soft: #C5D5B8;  /* 浅抹茶绿 */
+  --sports-coral: #C4956A;      /* 朱印色 */
+  --sports-card-bg: rgba(255, 255, 255, 0.6);  /* 卡片背景 */
+  --sports-card-border: rgba(139, 115, 85, 0.08);  /* 卡片边框 */
+  --sports-card-shadow: rgba(139, 115, 85, 0.06);  /* 卡片阴影 */
+  --sports-btn-primary: linear-gradient(135deg, #8B7355 0%, #A68D6F 100%);  /* 主按钮渐变 */
+}
+
+/* ============================================================
+ * 深夜模式（深色主题）：在 .dark 作用域覆写全部设计令牌
+ * 触发：根画布容器 <div id="app-canvas"> 加上 .dark 类
+ * 配色：深褐紫底 #1C1722 系 + 暖白文字，保留樱花粉/叶绿作点缀
+ * ============================================================ */
+.dark {
+  color-scheme: dark;
+  --background: oklch(0.17 0.012 300);
+  --foreground: oklch(0.93 0.01 85);
+  --card: oklch(0.22 0.015 300);
+  --card-foreground: oklch(0.92 0.012 85);
+  --primary: oklch(0.74 0.10 15);
+  --primary-foreground: oklch(0.15 0.01 300);
+  --secondary: oklch(0.30 0.02 300);
+  --secondary-foreground: oklch(0.90 0.02 85);
+  --muted: oklch(0.26 0.014 300);
+  --muted-foreground: oklch(0.72 0.02 85);
+  --accent: oklch(0.45 0.07 148);
+  --accent-foreground: oklch(0.95 0.03 145);
+  --destructive: oklch(0.68 0.17 25);
+  --border: oklch(0.32 0.018 300);
+  --input: oklch(0.30 0.016 300);
+  --ring: oklch(0.74 0.10 15);
+  --sakura: oklch(0.82 0.08 85);
+  --sakura-soft: oklch(0.30 0.04 85);
+  --leaf: oklch(0.76 0.10 148);
+  --leaf-soft: oklch(0.28 0.05 148);
+  --sky: oklch(0.78 0.08 230);
+  --sky-soft: oklch(0.34 0.05 230);
+  --sun: oklch(0.86 0.09 85);
+  --surface-1: oklch(0.24 0.015 300);
+  --surface-2: oklch(0.28 0.016 300);
+  --home-fade: 28, 23, 34; /* 深色下向深褐紫底过渡 */
+}
+
+/* 纸纹理：把浅噪点反相为深色噪点，避免深色下 3% 浅点刺眼 */
+.dark .paper-texture {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html { @apply bg-background; }
+  body { @apply bg-background text-foreground; }
+  button, input, textarea { font: inherit; }
+}
+
+@keyframes stamp-in {
+  0% { opacity: 0; transform: scale(2.1) rotate(-18deg); }
+  55% { opacity: 1; transform: scale(.88) rotate(4deg); }
+  75% { transform: scale(1.08) rotate(-2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-6deg); }
+}
+
+@keyframes soft-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.025); }
+}
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-stamp { animation: stamp-in .45s cubic-bezier(.2,.8,.2,1) both; }
+.animate-soft-pulse { animation: soft-pulse 3s ease-in-out infinite; }
+.animate-fade-in-up { animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* 呼吸法详情弹窗动画 */
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes slide-up {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fade-in 0.25s ease-out both; }
+.animate-slide-up { animation: slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* 今日计划页：切日淡入 / 抽屉上滑 */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes sheetUp {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+/* 加事抽屉：居中弹窗（scale + 淡入），适配手机端 */
+@keyframes sheetCenter {
+  0% { opacity: 0; transform: scale(0.94); }
+  100% { opacity: 1; transform: scale(1); }
+}
+/* 周历切周：淡入 + 轻微上移，营造淡移过渡 */
+@keyframes weekShift {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+/* 周历切周：方向感知平滑滑动（左切从右进，右切从左进，归位） */
+@keyframes weekSlideL {
+  0% { opacity: 0; transform: translateX(28px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+@keyframes weekSlideR {
+  0% { opacity: 0; transform: translateX(-28px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+/* 选中日期：弹性放大一下 */
+@keyframes dayPop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.14); }
+  100% { transform: scale(1); }
+}
+
+.app-scrollbar::-webkit-scrollbar { width: 0; }
+.app-scrollbar { scrollbar-width: none; }
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { scrollbar-width: none; }
+
+/* 横向滚动增强：iOS 动量滚动 + 手势锁定 + 隐藏滚动条 */
+.scrollbar-x {
+  display: flex;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y pinch-zoom;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-x::-webkit-scrollbar { display: none; }
+
+.paper-texture {
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='2' /%3E%3CfeColorMatrix type='saturate' values='0.1'/%3E%3C/filter%3E%3Crect width='100' height='100' fill='%23fcf8ef' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+.paper-shadow {
+  border: 1px solid oklch(0.92 0.02 60 / 0.3);
+}
+
+.tape-strip {
+  background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%), var(--sakura-soft, oklch(0.93 0.045 15));
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.paper-bottom-edge {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='8' preserveAspectRatio='none'%3E%3Cpath d='M0 8 L0 3 Q5 0 10 3 Q15 6 20 3 Q25 0 30 3 Q35 6 40 3 Q45 0 50 3 Q55 6 60 3 Q65 0 70 3 Q75 6 80 3 Q85 0 90 3 Q95 6 100 3 Q105 0 110 3 Q115 6 120 3 Q125 0 130 3 Q135 6 140 3 Q145 0 150 3 Q155 6 160 3 Q165 0 170 3 Q175 6 180 3 Q185 0 190 3 Q195 6 200 3 Q205 0 210 3 Q215 6 220 3 Q225 0 230 3 Q235 6 240 3 Q245 0 250 3 Q255 6 260 3 Q265 0 270 3 Q275 6 280 3 Q285 0 290 3 Q295 6 300 3 Q305 0 310 3 Q315 6 320 3 L320 8 Z' fill='black'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='8' preserveAspectRatio='none'%3E%3Cpath d='M0 8 L0 3 Q5 0 10 3 Q15 6 20 3 Q25 0 30 3 Q35 6 40 3 Q45 0 50 3 Q55 6 60 3 Q65 0 70 3 Q75 6 80 3 Q85 0 90 3 Q95 6 100 3 Q105 0 110 3 Q115 6 120 3 Q125 0 130 3 Q135 6 140 3 Q145 0 150 3 Q155 6 160 3 Q165 0 170 3 Q175 6 180 3 Q185 0 190 3 Q195 6 200 3 Q205 0 210 3 Q215 6 220 3 Q225 0 230 3 Q235 6 240 3 Q245 0 250 3 Q255 6 260 3 Q265 0 270 3 Q275 6 280 3 Q285 0 290 3 Q295 6 300 3 Q305 0 310 3 Q315 6 320 3 L320 8 Z' fill='black'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* ============================================================
+ * 暖枫手绘风进度条 / 加载（v0.1.43）
+ * 规范：产品/暖枫手绘风进度条与加载方案.md (v1.1)
+ * ============================================================ */
+
+/* 设计令牌：浅色 / 深色（星空专注页等）共用同一套类名作用域 */
+.wi-light {
+  --wi-ink: #6B5E58;
+  --wi-pink: #D9B36A;
+  --wi-pink-soft: #FAF4E6;
+  --wi-pink-texture: rgba(217, 179, 106, 0.38);
+  --wi-cream: #F7F1E8;
+  --wi-bg: #FBF6EE; /* 界面背景：已填充/未填充底色统一，仅斜线纹理区分已填充 */
+  --wi-track: #F2EBE2;
+  --wi-amber: #E8C98A;
+  --wi-error: #D96C6C;
+  --wi-muted: #888780;
+  --wi-border-soft: #E0D7C9;
+}
+
+.wi-dark {
+  --wi-ink: rgba(247, 241, 232, 0.6);
+  --wi-pink: rgba(247, 241, 232, 0.5);
+  --wi-pink-soft: rgba(247, 241, 232, 0.14);
+  --wi-pink-texture: rgba(247, 241, 232, 0.5);
+  --wi-cream: #1C1722;
+  --wi-bg: #1C1722; /* 深色界面背景 */
+  --wi-track: rgba(247, 241, 232, 0.14);
+  --wi-amber: #E8C98A;
+  --wi-error: #E5857E;
+  --wi-muted: rgba(247, 241, 232, 0.55);
+  --wi-border-soft: rgba(247, 241, 232, 0.18);
+}
+
+/* 深夜模式下：未显式指定 dark 变体的手绘进度条（默认 wi-light）跟随深色令牌 */
+.dark .wi-light {
+  --wi-ink: rgba(247, 241, 232, 0.6);
+  --wi-pink: rgba(247, 241, 232, 0.5);
+  --wi-pink-soft: rgba(247, 241, 232, 0.14);
+  --wi-pink-texture: rgba(247, 241, 232, 0.5);
+  --wi-cream: #1C1722;
+  --wi-bg: #1C1722;
+  --wi-track: rgba(247, 241, 232, 0.14);
+  --wi-amber: #E8C98A;
+  --wi-error: #E5857E;
+  --wi-muted: rgba(247, 241, 232, 0.55);
+  --wi-border-soft: rgba(247, 241, 232, 0.18);
+}
+
+/* 关键帧 */
+@keyframes hd-indeterminate {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(330%); }
+}
+@keyframes hd-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes hd-shimmer {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
+}
+@keyframes hd-complete-lift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1px); }
+}
+@keyframes hd-error-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-1.5px); }
+  75% { transform: translateX(1.5px); }
+}
+
+/* 动画工具类 */
+.hd-indeterminate-spot { animation: hd-indeterminate 1.4s ease-in-out infinite; }
+/* 加载页专属进度动画（仅 .wi-loader-progress 作用域，外不溢） */
+.hd-loader-spot { animation: hd-indeterminate 1.4s ease-in-out infinite; }
+.hd-spin { animation: hd-spin 1.2s linear infinite; }
+.hd-shimmer { animation: hd-shimmer 1.5s ease-in-out infinite; }
+.hd-error-shake { animation: hd-error-shake 0.2s ease-in-out 1; }
+
+/* 减少动态效果：全部降级为静态 */
+@media (prefers-reduced-motion: reduce) {
+  .hd-indeterminate-spot,
+  .hd-loader-spot,
+  .hd-spin,
+  .hd-shimmer,
+  .hd-complete-lift,
+  .hd-error-shake,
+  .animate-[fadeIn_200ms_ease],
+  .animate-[fadeIn_200ms_ease_forwards],
+  .animate-[sheetUp_300ms_ease_forwards],
+  .animate-[sheetCenter_220ms_cubic-bezier\(0\.22\2c 1\2c 0\.36\2c 1\)],
+  .animate-[weekShift_200ms_ease],
+  .animate-[weekSlideL_260ms_cubic-bezier\(0\.22\2c 1\2c 0\.36\2c 1\)],
+  .animate-[weekSlideR_260ms_cubic-bezier\(0\.22\2c 1\2c 0\.36\2c 1\)],
+  .animate-[dayPop_240ms_ease] {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+ * 星空专注页（v0.1.44 P0 高级感）
+ * ============================================================ */
+
+/* 关键帧 */
+@keyframes focus-constellation-glow {
+  0% { filter: drop-shadow(0 0 6px rgba(232,201,138,0.35)); opacity: 0.5; }
+  50% { filter: drop-shadow(0 0 14px rgba(232,201,138,0.7)); opacity: 1; }
+  100% { filter: drop-shadow(0 0 8px rgba(232,201,138,0.45)); opacity: 0.6; }
+}
+@keyframes focus-press-glow {
+  0% { opacity: 0; transform: scale(0.6); }
+  50% { opacity: 0.5; }
+  100% { opacity: 0; transform: scale(1.1); }
+}
+
+/* 完成弹窗柔光（沿用历史类名，仅作装饰） */
+.focus-constellation-glow { animation: focus-constellation-glow 1.5s ease-out; }
+
+/* 玻璃态胶囊按钮 */
+.focus-glass-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 150ms ease, filter 200ms ease;
+}
+.focus-glass-btn:active { transform: scale(0.98); filter: brightness(1.15); }
+.focus-glass-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at center, rgba(255,248,235,0.35), transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+}
+.focus-glass-btn:active::after { animation: focus-press-glow 400ms ease-out; }
+.focus-glass-btn-ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: transparent;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 150ms ease, background 200ms ease;
+}
+.focus-glass-btn-ghost:active { transform: scale(0.98); background: rgba(243,226,192,0.08); }
+
+/* 减少动态效果：按钮按压光晕降级 */
+@media (prefers-reduced-motion: reduce) {
+  .focus-glass-btn::after {
+    animation: none !important;
+  }
+}
+
+/* ============ 专注页背景粒子（暖黄星尘，纯装饰，缓慢上浮+轻晃） ============ */
+@keyframes focus-particle-float {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  10% { opacity: var(--p-op, 0.5); }
+  90% { opacity: var(--p-op, 0.5); }
+  100% { transform: translate3d(var(--p-dx, 0px), var(--p-dy, -120px), 0); opacity: 0; }
+}
+.focus-particle {
+  position: absolute;
+  bottom: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,250,235,1) 0%, rgba(243,226,192,0.7) 30%, rgba(243,226,192,0.15) 60%, transparent 70%);
+  box-shadow: 0 0 5px 1px rgba(255,250,235,0.35), 0 0 12px 2px rgba(243,226,192,0.12);
+  animation: focus-particle-float var(--p-dur, 14s) linear infinite;
+  animation-delay: var(--p-delay, 0s);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .focus-particle { animation: none !important; opacity: 0 !important; }
+}
+
+/* ============================================================
+ * 心迹 · 翻页手帐（MindTraceBook）样式
+ * 拟真实体书 3D 翻页效果
+ * ============================================================ */
+
+/* 书本容器 perspective */
+.mind-book-container {
+  perspective: 2000px;
+  perspective-origin: center center;
+}
+
+/* 翻页动画关键帧 —— 向前翻 */
+@keyframes mind-flip-forward {
+  0% {
+    transform: rotateY(0deg);
+    transform-origin: left center;
+  }
+  50% {
+    transform: rotateY(-15deg);
+    box-shadow: -20px 0 40px rgba(139, 115, 85, 0.15);
+  }
+  100% {
+    transform: rotateY(-180deg);
+    transform-origin: left center;
+  }
+}
+
+/* 翻页动画关键帧 —— 向后翻 */
+@keyframes mind-flip-backward {
+  0% {
+    transform: rotateY(-180deg);
+    transform-origin: left center;
+  }
+  50% {
+    transform: rotateY(-165deg);
+    box-shadow: 20px 0 40px rgba(139, 115, 85, 0.15);
+  }
+  100% {
+    transform: rotateY(0deg);
+    transform-origin: left center;
+  }
+}
+
+/* 翻页状态类 */
+.book-flip-forward {
+  animation: mind-flip-forward 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.book-flip-backward {
+  animation: mind-flip-backward 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+/* 翻页时的阴影过渡层 */
+.book-flip-forward::after,
+.book-flip-backward::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(139, 115, 85, 0) 0%,
+    rgba(139, 115, 85, 0.08) 50%,
+    rgba(139, 115, 85, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 纸张纹理增强（心迹专属） */
+.mind-book-container .paper-texture {
+  opacity: 0.4;
+}
+
+/* 减少动态效果降级 */
+@media (prefers-reduced-motion: reduce) {
+  .book-flip-forward,
+  .book-flip-backward {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .mind-book-container {
+    perspective: none;
+  }
+}
+
+/* ============================================================
+ * 心迹 · 高级排版样式
+ * ============================================================ */
+
+/* 字体定义 */
+.font-handwrite {
+  font-family: 'LXGW WenKai', 'Noto Serif SC', serif;
+}
+
+.font-serif-sc {
+  font-family: 'Noto Serif SC', serif;
+}
+
+/* 心迹移动端基础样式 */
+.mind-mobile-page {
+  font-family: 'Noto Serif SC', 'LXGW WenKai', serif;
+}
+
+/* 纸张背景（更细腻的纹理） */
+.mind-paper-bg {
+  background-color: #FAF8F2;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0.08'/%3E%3C/filter%3E%3Crect width='300' height='300' fill='%23FAF8F2' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+.mind-paper-bg-alt {
+  background-color: #F7F3E9;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' seed='8' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0.08'/%3E%3C/filter%3E%3Crect width='300' height='300' fill='%23F7F3E9' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* 手绘分割线 */
+.mind-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mind-divider::before,
+.mind-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(160, 137, 108, 0.25) 50%, transparent 100%);
+}
+
+/* 心情色彩映射 */
+.mood-leaf { --mood-color: #7B9A7B; --mood-bg: rgba(123, 154, 123, 0.08); }
+.mood-tea { --mood-color: #B8956A; --mood-bg: rgba(184, 149, 106, 0.08); }
+.mood-star { --mood-color: #9B8CB8; --mood-bg: rgba(155, 140, 184, 0.08); }
+.mood-sun { --mood-color: #C9956B; --mood-bg: rgba(201, 149, 107, 0.1); }
+.mood-heart { --mood-color: #B87878; --mood-bg: rgba(184, 120, 120, 0.08); }
+
+/* 墨迹晕染效果 */
+.ink-blur {
+  filter: blur(0.5px);
+}
+
+/* 大号衬线标题 */
+.mind-date-display {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* 手写体正文 */
+.mind-handwrite-text {
+  font-family: 'LXGW WenKai', 'Noto Serif SC', serif;
+  line-height: 2.2;
+  letter-spacing: 0.02em;
+}
+
+/* 引言样式 */
+.mind-quote {
+  font-family: 'Noto Serif SC', serif;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.9;
+}
+
+/* 印章效果 */
+.mind-stamp {
+  opacity: 0.15;
+  transform: rotate(-8deg);
+}
+
+/* 输入框高级样式 */
+.mind-textarea {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(160, 137, 108, 0.3);
+  border-radius: 0;
+  padding: 12px 0;
+  font-family: 'LXGW WenKai', 'Noto Serif SC', serif;
+  font-size: 18px;
+  line-height: 2.2;
+  letter-spacing: 0.02em;
+  color: #5A5248;
+  transition: border-color 0.3s ease;
+}
+
+.mind-textarea:focus {
+  outline: none;
+  border-bottom-color: rgba(160, 137, 108, 0.6);
+}
+
+.mind-textarea::placeholder {
+  color: rgba(160, 137, 108, 0.35);
+  font-family: 'LXGW WenKai', 'Noto Serif SC', serif;
+}
+
+/* 封存按钮高级样式 */
+.mind-seal-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mind-seal-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
+}
+
+.mind-seal-btn:hover::before {
+  left: 100%;
+}
+
+/* 心情选择器高级样式 */
+.mood-option {
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mood-option-active {
+  background: var(--mood-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(160, 137, 108, 0.12);
+}
+
+/* 侧边装饰线 */
+.mind-side-line {
+  position: relative;
+}
+
+.mind-side-line::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 4px;
+  bottom: 4px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(160, 137, 108, 0.4), transparent);
+}
+
+/* 日期戳记 */
+.mind-date-stamp {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+}
+
+/* 动画 */
+@keyframes ink-spread {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.ink-spread {
+  animation: ink-spread 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes gentle-in {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.gentle-in {
+  animation: gentle-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 减少动态效果 */
+@media (prefers-reduced-motion: reduce) {
+  .ink-spread,
+  .gentle-in {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+ * 专注页 · 东方手帐美学重设计（fz- 作用域，独立不冲突）
+ * 设计调性：克制、温润、高级，像静静摊开在木桌上的复古诗集
+ * ============================================================ */
+
+/* ---- 设计令牌 ---- */
+.fz-root {
+  --fz-paper: #FBF9F1;        /* 道林纸米色（统一背景） */
+  --fz-paper-2: #F4EEDF;      /* 纸面深一档 */
+  --fz-ink: #4A3B32;          /* 碳棕 / 黛墨（文字与线条） */
+  --fz-ink-soft: #6B5E58;     /* 浅一号碳棕（副标题） */
+  --fz-gold: rgba(217, 179, 106, 0.55); /* 暖金晕染 */
+  --fz-gold-soft: rgba(217, 179, 106, 0.22);
+  --fz-line: rgba(74, 59, 50, 0.16);
+  --fz-line-soft: rgba(74, 59, 50, 0.10);
+}
+
+/* ---- 页面背景：道林纸肌理（纸纤维纹理，方向性噪点） ---- */
+.fz-bg-paper {
+  background-color: var(--fz-paper);
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='fzFiber'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' seed='5'/%3E%3CfeColorMatrix type='saturate' values='0.06'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.29 0 0 0 0 0.23 0 0 0 0 0.18 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' fill='%23FBF9F1' filter='url(%23fzFiber)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* ---- 顶部计时区：严格垂直居中、间距充足、绝不重叠 ---- */
+.fz-time-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 0 16px;
+}
+.fz-time-display {
+  font-family: 'Noto Serif SC', 'LXGW WenKai', serif;
+  font-weight: 300;
+  font-size: 60px;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  color: var(--fz-ink);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  white-space: nowrap;
+  user-select: none;
+}
+.fz-time-sub {
+  font-family: 'LXGW WenKai', 'Noto Serif SC', serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  color: var(--fz-ink-soft);
+  white-space: nowrap;
+}
+.fz-time-sub-dot {
+  color: var(--fz-gold);
+  margin: 0 2px;
+}
+
+/* ---- 温润纸感圆环倒计时 ---- */
+.fz-ring-container {
+  position: relative;
+  width: min(300px, 78vw);
+  height: min(300px, 78vw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fz-ring-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 暖金柔光晕（静态基线，A 方案在 running 态叠加呼吸） */
+  filter: drop-shadow(0 0 24px rgba(244, 208, 111, 0.18));
+}
+/* A. 运行时光晕呼吸脉动（3.6s 缓慢律动） */
+.fz-root[data-status="running"] .fz-ring-wrap {
+  animation: fz-glow-breathe 3.6s ease-in-out infinite alternate;
+}
+@keyframes fz-glow-breathe {
+  from { filter: drop-shadow(0 0 18px rgba(244, 208, 111, 0.16)); }
+  to   { filter: drop-shadow(0 0 34px rgba(244, 208, 111, 0.34)); }
+}
+/* B. 进度弧线末端发光光点：暖金辉光 */
+.fz-ring-glow-dot {
+  filter: drop-shadow(0 0 8px rgba(244, 208, 111, 0.7));
+  pointer-events: none;
+}
+
+/* C. 背景星尘：极淡暖金微粒缓慢上浮（不拦截交互、不抢视觉） */
+.fz-stardust {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.fz-dust {
+  position: absolute;
+  bottom: -12px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(244, 208, 111, 0.55), rgba(244, 208, 111, 0));
+  opacity: 0;
+  animation: fz-dust-float 14s linear infinite;
+}
+.fz-dust-0 { left: 12%; animation-delay: 0s;   animation-duration: 15s; }
+.fz-dust-1 { left: 28%; animation-delay: 4s;   animation-duration: 18s; width: 3px; height: 3px; }
+.fz-dust-2 { left: 44%; animation-delay: 8s;   animation-duration: 13s; }
+.fz-dust-3 { left: 60%; animation-delay: 2s;   animation-duration: 17s; width: 5px; height: 5px; }
+.fz-dust-4 { left: 76%; animation-delay: 6s;   animation-duration: 16s; }
+.fz-dust-5 { left: 90%; animation-delay: 10s;  animation-duration: 19s; width: 3px; height: 3px; }
+@keyframes fz-dust-float {
+  0%   { transform: translateY(0) scale(0.6); opacity: 0; }
+  15%  { opacity: 0.7; }
+  85%  { opacity: 0.5; }
+  100% { transform: translateY(-110vh) scale(1); opacity: 0; }
+}
+.fz-ring-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+/* 中心文字：数字 + 副标题 垂直叠加 */
+.fz-ring-center {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+}
+.fz-ring-center .fz-time-display {
+  font-size: clamp(44px, 13vw, 60px);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.4), 0 2px 6px rgba(74,59,50,0.06);
+}
+.fz-ring-center .fz-time-sub {
+  margin-top: 8px;
+}
+
+/* ---- 底部按钮：火漆印 / 压凹纸面微立体 ---- */
+.fz-press-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 54px;
+  border-radius: 999px;
+  font-family: 'LXGW WenKai', 'Noto Serif SC', serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--fz-paper);
+  background:
+    linear-gradient(180deg, #56463B 0%, #4A3B32 100%);
+  /* 压凹纸面：内阴影凹陷 + 顶部高光 + 落影 */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 252, 245, 0.18),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.28),
+    0 1px 0 rgba(255, 252, 245, 0.6),
+    0 8px 18px rgba(74, 59, 50, 0.16);
+  border: 1px solid rgba(74, 59, 50, 0.5);
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease, filter 200ms ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; /* 移动端：禁用双击缩放和手势识别，确保点击立即响应 */
+}
+.fz-press-btn:hover { filter: brightness(1.05); }
+.fz-press-btn:active {
+  transform: translateY(1.5px);
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.34),
+    inset 0 -1px 2px rgba(255, 252, 245, 0.10),
+    0 1px 0 rgba(255, 252, 245, 0.5),
+    0 3px 8px rgba(74, 59, 50, 0.12);
+}
+/* 暖金火漆点缀（按钮左侧小印记） */
+.fz-press-btn .fz-seal {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #E7C588 0%, #D9B36A 55%, #B8956A 100%);
+  box-shadow: inset 0 1px 1px rgba(255, 248, 235, 0.6), 0 1px 2px rgba(74, 59, 50, 0.3);
+  flex: none;
+}
+
+/* 幽灵 / 完成按钮：描边压凹纸面 */
+.fz-press-btn-ghost {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 54px;
+  border-radius: 999px;
+  font-family: 'LXGW WenKai', 'Noto Serif SC', serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--fz-ink);
+  background: rgba(251, 249, 241, 0.65);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 252, 245, 0.8),
+    inset 0 -2px 5px rgba(74, 59, 50, 0.08),
+    0 1px 0 rgba(255, 252, 245, 0.6);
+  border: 1px solid var(--fz-line);
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease, background 200ms ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; /* 移动端：禁用双击缩放和手势识别，确保点击立即响应 */
+}
+.fz-press-btn-ghost:hover { background: rgba(251, 249, 241, 0.9); }
+.fz-press-btn-ghost:active {
+  transform: translateY(1.5px);
+  box-shadow:
+    inset 0 2px 5px rgba(74, 59, 50, 0.14),
+    0 1px 0 rgba(255, 252, 245, 0.6);
+}
+
+/* ---- 角落圆钮（返回/音乐/导航/设置）：温润半透米色 ---- */
+.fz-corner-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: var(--fz-ink);
+  background: rgba(251, 249, 241, 0.72);
+  border: 1px solid var(--fz-line);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 252, 245, 0.8),
+    0 4px 10px rgba(74, 59, 50, 0.08);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  cursor: pointer;
+  transition: transform 140ms ease, background 200ms ease;
+}
+.fz-corner-btn:hover { background: rgba(251, 249, 241, 0.95); }
+.fz-corner-btn:active { transform: translateY(1px); }
+
+/* ---- 弹窗 / 侧栏：米色纸面卡 + 碳棕描边 + 暖金点缀 ---- */
+.fz-card {
+  background: var(--fz-paper);
+  border: 1px solid var(--fz-line);
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(74, 59, 50, 0.16);
+}
+.fz-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--fz-line), transparent);
+  border: none;
+}
+
+/* ---- 关键帧 ---- */
+@keyframes fz-breathe {
+  0%, 100% { opacity: 0.42; transform: scale(1); }
+  50%      { opacity: 0.82; transform: scale(1.045); }
+}
+@keyframes fz-gold-drift {
+  0%   { transform: translate3d(-6%, -4%, 0) scale(1); }
+  50%  { transform: translate3d(6%, 4%, 0) scale(1.08); }
+  100% { transform: translate3d(-6%, -4%, 0) scale(1); }
+}
+@keyframes fz-drift-soft {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* ---- 新增：中心暖光氛围 ---- */
+.fz-center-glow-bg {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  width: 600px;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(217, 179, 106, 0.10) 0%, rgba(217, 179, 106, 0.04) 40%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ---- 新增：圆环后方暖光 ---- */
+.fz-center-glow {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(217, 179, 106, 0.08) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+  animation: fz-glow-breathe-soft 4.5s ease-in-out infinite alternate;
+}
+@keyframes fz-glow-breathe-soft {
+  from { opacity: 0.6; transform: scale(0.96); }
+  to   { opacity: 1;   transform: scale(1.03); }
+}
+
+/* ---- 新增：手绘波浪装饰线 ---- */
+.fz-wave-deco {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 8px;
+  pointer-events: none;
+  opacity: 0.7;
+}
+.fz-wave-top {
+  top: -18px;
+}
+.fz-wave-bottom {
+  bottom: -18px;
+}
+
+/* ---- 新增：数字墨迹渗透 ---- */
+.fz-time-ink {
+  position: relative;
+  text-shadow:
+    0 0 0.5px rgba(74,59,50,0.35),
+    0 0 1px rgba(74,59,50,0.18),
+    0 0 2px rgba(74,59,50,0.08);
+}
+
+/* ---- 新增：自由计时环旋转 ---- */
+@keyframes fz-free-spin {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -260; }
+}
+.fz-free-ring {
+  filter: drop-shadow(0 0 6px rgba(244, 208, 111, 0.4));
+}
+
+/* ---- 新增：状态切换仪式感 ---- */
+/* idle → running：圆环微缩弹入 */
+.fz-root[data-status="running"] .fz-ring-container {
+  animation: fz-ring-pop 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes fz-ring-pop {
+  0%   { transform: scale(0.96); opacity: 0.5; }
+  60%  { transform: scale(1.02); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* completed：圆环金光辉光扩散 */
+.fz-root[data-status="completed"] .fz-ring-wrap {
+  animation: fz-complete-glow 1.2s ease-out;
+}
+@keyframes fz-complete-glow {
+  0%   { filter: drop-shadow(0 0 24px rgba(244, 208, 111, 0.2)); }
+  50%  { filter: drop-shadow(0 0 60px rgba(244, 208, 111, 0.6)); }
+  100% { filter: drop-shadow(0 0 24px rgba(244, 208, 111, 0.3)); }
+}
+
+/* ---- 完成时光辉扩散（克制版） ---- */
+.fz-complete-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid rgba(244, 208, 111, 0.5);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(1);
+}
+.fz-root[data-status="completed"] .fz-complete-ring {
+  animation: fz-ring-spread 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.fz-root[data-status="completed"] .fz-complete-ring-2 {
+  animation-delay: 0.28s;
+}
+@keyframes fz-ring-spread {
+  0%   { opacity: 0.45; transform: scale(0.95); }
+  60%  { opacity: 0.15; }
+  100% { opacity: 0;    transform: scale(1.8); }
+}
+
+/* paused：星尘减速、圆环褪色 */
+.fz-root[data-status="paused"] .fz-dust {
+  animation-duration: 28s !important;
+  animation-delay: 0s !important;
+}
+.fz-root[data-status="paused"] .fz-ring-wrap {
+  filter: drop-shadow(0 0 16px rgba(244, 208, 111, 0.1)) saturate(0.6);
+}
+
+/* running：星尘加速 */
+.fz-root[data-status="running"] .fz-dust {
+  animation-duration: 10s !important;
+}
+
+/* ---- 新增：手写体副标题 ---- */
+.fz-time-sub-hand {
+  font-family: 'LXGW WenKai', 'Noto Serif SC', serif;
+  letter-spacing: 0.12em;
+}
+
+/* ---- 减少动态效果：圆环降级为静态 ---- */
+@media (prefers-reduced-motion: reduce) {
+  .fz-ring-wrap {
+    animation: none !important;
+    filter: drop-shadow(0 0 18px rgba(244, 208, 111, 0.28));
+  }
+  .fz-ring-glow-dot {
+    filter: none !important;
+  }
+  .fz-stardust {
+    display: none !important;
+  }
+  .fz-ring-svg circle {
+    transition: none !important;
+  }
+  .fz-center-glow {
+    display: none !important;
+  }
+  .fz-free-ring {
+    animation: none !important;
+  }
+  .fz-complete-ring {
+    display: none !important;
+  }
+  .page-nav-enter {
+    animation: none !important;
+  }
+}
+
+/* ---- 底部导航切换动画 ---- */
+@keyframes page-nav-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-nav-enter {
+  animation: page-nav-in 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---- PageLoader 保底：即使 JS 完全失败，4 秒后也会自动消失 ---- */
+@keyframes wi-loader-fallback {
+  0%, 85% {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+.wi-loader-root {
+  animation: wi-loader-fallback 4s ease-out forwards;
+}
+
+/* ============================================================
+ * 运动手帐 · 通用样式（v0.1.28 设计 Token）
+ * ============================================================ */
+
+/* 页面背景 */
+.sports-page {
+  background-color: var(--sports-paper);
+}
+
+/* 卡片容器：统一圆角、阴影、边框 */
+.sports-card {
+  background-color: var(--sports-card-bg);
+  border: 1px solid var(--sports-card-border);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px var(--sports-card-shadow);
+}
+
+.sports-card-lg {
+  background-color: var(--sports-card-bg);
+  border: 1px solid var(--sports-card-border);
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(139, 115, 85, 0.08);
+}
+
+.sports-card-sm {
+  background-color: var(--sports-card-bg);
+  border: 1px solid var(--sports-card-border);
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(139, 115, 85, 0.05);
+}
+
+/* 文字颜色 */
+.sports-text {
+  color: var(--sports-ink);
+}
+
+.sports-text-soft {
+  color: var(--sports-ink-soft);
+}
+
+.sports-text-muted {
+  color: var(--sports-ink-muted);
+}
+
+.sports-text-gold {
+  color: var(--sports-gold);
+}
+
+/* 背景颜色 */
+.sports-bg-sand {
+  background-color: var(--sports-sand);
+}
+
+.sports-bg-sand-soft {
+  background-color: rgba(246, 235, 221, 0.4);
+}
+
+.sports-bg-card {
+  background-color: var(--sports-card-bg);
+}
+
+/* 分隔线 */
+.sports-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 197, 178, 0.3), transparent);
+}
+
+/* 主按钮样式 */
+.sports-btn-primary {
+  background: var(--sports-btn-primary);
+  color: var(--sports-paper);
+  border-radius: 24px;
+  padding: 16px 24px;
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(139, 115, 85, 0.3);
+  transition: all 0.2s ease;
+}
+
+.sports-btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* 圆形按钮（停止/暂停） */
+.sports-btn-coral {
+  background: linear-gradient(145deg, #C4956A, #A67850);
+  color: var(--sports-paper);
+  border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(166, 120, 80, 0.35);
+}
+
+.sports-btn-tea {
+  background: linear-gradient(145deg, #8B7355, #6B5340);
+  color: var(--sports-paper);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(107, 83, 64, 0.4);
+}
+
+/* 间距规范 */
+.sports-page-padding {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.sports-section-spacing {
+  margin-bottom: 20px;
+}
+
+.sports-card-padding {
+  padding: 16px;
+}
+
+/* 动画 */
+@keyframes sports-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sports-enter {
+  animation: sports-fade-in-up 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ============================================================
+ * 日记 / 备忘录 富文本编辑区样式（限定作用域，不影响其他页面）
+ * ============================================================ */
+.diary-content,
+.memo-content {
+  font-family: 'LXGW WenKai', 'Noto Serif SC', serif;
+  word-break: break-word;
+}
+/* 标题分级：覆盖浏览器默认衬线大字号，改用与手写体协调的字号 */
+.diary-content h1,
+.memo-content h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0.6em 0 0.3em;
+}
+.diary-content h2,
+.memo-content h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0.5em 0 0.3em;
+}
+.diary-content h3,
+.memo-content h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0.4em 0 0.25em;
+}
+.diary-content u,
+.memo-content u {
+  text-decoration: underline;
+}
+.diary-content i,
+.memo-content i {
+  font-style: italic;
+}
+.diary-content b,
+.diary-content strong,
+.memo-content b,
+.memo-content strong {
+  font-weight: 700;
+}
+/* 列表/详情卡片中的富文本：限制最大高度，避免撑爆卡片 */
+.memo-content {
+  max-height: 7.5em;
+  overflow: hidden;
+}

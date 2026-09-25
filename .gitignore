@@ -1,0 +1,103 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+dev*.log
+dev*.err
+
+# env files
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# 开发临时文件
+_dev*.log
+_tsc_*.log
+_build_*.log
+install-*.log
+_page_check.txt
+walkthrough-report.md
+app.css
+app2.css
+-w
+_g.cjs
+p.html
+page.html
+DESIGN-状态页-v2.md
+
+# Capacitor / Android
+/android/
+/ios/
+*.keystore
+*.jks
+!capacitor.config.ts
+!capacitor.config.json
+
+# ---------------------------------------------------------------------------
+# 开源发布：仅保留软件运行所需，以下为内部脚本 / 构建产物 / 规划文档，不提交
+# （文件仍保留在你本机，只是不会被推到 GitHub）
+# ---------------------------------------------------------------------------
+
+# 打包产物（APK / AAB）
+*.apk
+*.aab
+
+# 根目录内部脚本与制图中间产物（图标生成、路径缓存等）
+_icon_*.py
+_icon_*.png
+_user_*.png
+_maple_leaf_master.png
+_*.txt
+_*.tmp
+sync-version.ps1
+
+# 内部发布 / 打包脚本（含本机用户名路径，不对外）
+一键打包.bat
+build-release.ps1
+
+# 自动生成的预览图
+generated-images/
+
+# 内部产品规划与版本文档（作者自用，非软件所需）
+产品/
+Prompt/
+关于我的界面/
+
+# ---------------------------------------------------------------------------
+# 本地工具 / IDE / Agent 配置（非软件所需，且含本机隐私，不提交）
+# ---------------------------------------------------------------------------
+.workbuddy/
+.codebuddy/
+.trae/
+.qoder/
+.pnpm-store/
+
+# pnpm 锁定文件（本项目用 npm + --legacy-peer-deps，见 README；pnpm 不用）
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+# 临时 / 原型文件
+tmp_generate_image.js
+status-prototype.html
+
+# 开发辅助脚本与内部文档（非运行所需）
+scripts/
+docs/
